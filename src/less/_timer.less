@@ -1,0 +1,41 @@
+#focus {
+  .timer {
+    grid-area: timer;
+
+    display: grid;
+    align-content: center;
+    justify-content: start;
+    grid-template-areas: 'clock-controls timer-controls' 'clock timer-controls' 'goal timer-controls';
+    gap: 1em;
+
+
+    .clock {
+      grid-area: clock;
+      font-size: 6em;
+      font-weight: 600;
+    }
+
+    .clock-controls {
+      grid-area: clock-controls;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .timer-controls {
+      grid-area: timer-controls;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1em;
+    }
+
+    .goal {
+      grid-area: goal;
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+}

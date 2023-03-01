@@ -1,0 +1,52 @@
+#focus {
+  position: relative;
+  padding: 1em;
+
+  display: grid;
+  grid-template-areas: 'header header' 'timer sfx' 'footer footer';
+  grid-template-rows: auto 1fr;
+
+  //background-image: var(--focus-background-image);
+  height: 100vh;
+
+  .header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .logo-container {
+      .logo-primary {
+        font-family: 'Zeyada', cursive;
+        font-size: 5em;
+      }
+
+      .logo-secondary {
+        margin-left: 5em;
+        margin-top: -1em;
+      }
+    }
+  }
+
+  .footer {
+    grid-area: footer;
+    display: flex;
+    justify-content: center;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1em;
+
+    .control {
+      width: 30px;
+
+      path {
+        //fill: white;
+      }
+    }
+  }
+}
