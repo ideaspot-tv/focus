@@ -36,21 +36,23 @@
         </div>
     </div>
     <div class="timer">
-        <div class="clock-controls">
-            <button class="control">-</button>
-            <button class="control">5</button>
-            <button class="control">10</button>
-            <button class="control">15</button>
-            <button class="control">30</button>
-            <button class="control">45</button>
-            <button class="control">60</button>
-            <button class="control">+</button>
+        <div class="duration-controls">
+            <button class="control control-sub-minute">-</button>
+            <button class="control control-set-minutes" data-minutes="5">5</button>
+            <button class="control control-set-minutes" data-minutes="10">10</button>
+            <button class="control control-set-minutes" data-minutes="15">15</button>
+            <button class="control control-set-minutes" data-minutes="30">30</button>
+            <button class="control control-set-minutes" data-minutes="45">45</button>
+            <button class="control control-set-minutes" data-minutes="60">60</button>
+            <button class="control control-add-minute">+</button>
         </div>
-        <div class="clock">25:00</div>
+        <div class="clock">00:00</div>
         <div class="goal"><input type="text" placeholder="Tutaj mój cel"></div>
         <div class="timer-controls">
-            <button class="control">start</button>
-            <button class="control">reset</button>
+            <button class="control control-start">start</button>
+            <button class="control control-pause">pause</button>
+            <button class="control control-resume">resume</button>
+            <button class="control control-reset">reset</button>
         </div>
     </div>
 

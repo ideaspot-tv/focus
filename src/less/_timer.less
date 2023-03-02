@@ -5,7 +5,7 @@
     display: grid;
     align-content: center;
     justify-content: start;
-    grid-template-areas: 'clock-controls timer-controls' 'clock timer-controls' 'goal timer-controls';
+    grid-template-areas: 'duration-controls timer-controls' 'clock timer-controls' 'goal timer-controls';
     gap: 1em;
 
 
@@ -13,10 +13,11 @@
       grid-area: clock;
       font-size: 6em;
       font-weight: 600;
+      width: 6ex;
     }
 
-    .clock-controls {
-      grid-area: clock-controls;
+    .duration-controls {
+      grid-area: duration-controls;
       display: flex;
       justify-content: space-around;
     }
@@ -35,6 +36,30 @@
 
       input {
         width: 100%;
+      }
+    }
+  }
+
+  .timer[data-state="stopped"] {
+    .timer-controls {
+      .control-pause, .control-resume {
+        display: none;
+      }
+    }
+  }
+
+  .timer[data-state="ticking"] {
+    .timer-controls {
+      .control-start, .control-resume {
+        display: none;
+      }
+    }
+  }
+
+  .timer[data-state="paused"] {
+    .timer-controls {
+      .control-start, .control-pause {
+        display: none;
       }
     }
   }
