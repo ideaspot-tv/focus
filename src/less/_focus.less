@@ -2,14 +2,20 @@
   position: relative;
   padding: 1em;
 
-  background-color: red;
+  background-image: var(--focus-background-image);
+  color: var(--front-color);
 
   display: grid;
   grid-template-areas: 'header header' 'timer sfx' 'footer footer';
   grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr 1fr;
 
-  //background-image: var(--focus-background-image);
-  height: 100vh;
+  @media (max-width: @desktopBreakpoint) {
+    grid-template-areas: 'header' 'timer' 'sfx' 'footer';
+    grid-template-columns: 1fr;
+  }
+
+  min-height: 100vh;
 
   .header {
     grid-area: header;
@@ -50,5 +56,17 @@
         //fill: white;
       }
     }
+  }
+
+
+
+  button {
+    background: none;
+    border: 2px solid var(--front-color);
+    padding: 0.5em;
+    border-radius: 10px;
+    min-width: 2em;
+    color: var(--front-color);
+    cursor: pointer;
   }
 }

@@ -1,6 +1,8 @@
 #focus {
   .timer {
     grid-area: timer;
+    justify-self: center;
+    max-width: 500px;
 
     display: grid;
     align-content: center;
@@ -61,6 +63,19 @@
       .control-start, .control-pause {
         display: none;
       }
+    }
+  }
+
+  .goal input {
+    border: none;
+    background: none;
+    color: var(--front-color);
+    outline: none;
+
+    font-size: 1.2em;
+
+    &::placeholder {
+      color: var(--front-transparent-color);
     }
   }
 }
