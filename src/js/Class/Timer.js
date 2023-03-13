@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const INITIAL_DURATION = 0.25;
+const INITIAL_DURATION = 30;
 const STATES = {
     'STOPPED': 'stopped',
     'TICKING': 'ticking',
