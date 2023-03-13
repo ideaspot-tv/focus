@@ -3,6 +3,7 @@
   padding: 1em;
 
   background-image: var(--focus-background-image);
+  background-size: cover;
   color: var(--front-color);
 
   display: grid;
@@ -85,4 +86,8 @@
     color: var(--front-color);
     cursor: pointer;
   }
+}
+
+#focus:fullscreen .control-fullscreen {
+  display: none;
 }

@@ -31,8 +31,10 @@
         padding: 10px;
 
         .toggle-icon {
-          height: 60px;
+          //height: 60px;
           text-align: center;
+          font-size: 3em;
+          color: var(--front-transparent-color);
 
           position: absolute;
           left: 50%;
@@ -40,12 +42,12 @@
           transform: translate(-50%, -50%);
           transition: transform ease 0.5s;
 
-          svg {
-            height: 100%;
-            path {
-              fill: var(--front-transparent-color);
-            }
-          }
+          //svg {
+          //  height: 100%;
+          //  path {
+          //    fill: var(--front-transparent-color);
+          //  }
+          //}
         }
 
         input {
@@ -63,9 +65,10 @@
 
           .toggle-icon {
             transform: translate(-50%, -70%);
-            svg path {
-              fill: var(--front-color);
-            }
+            color: var(--front-color);
+            //svg path {
+            //  fill: var(--front-color);
+            //}
           }
 
           input {

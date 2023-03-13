@@ -8,6 +8,7 @@ const STATES = {
     'TICKING': 'ticking',
     'PAUSED': 'paused',
 };
+const BASE_TITLE = 'Focus by ideaspot.tv';
 
 
 export default class Timer {
@@ -237,6 +238,7 @@ export default class Timer {
         }
 
         this.el.dataset.state = state;
+        document.title = (state === STATES.TICKING) ? `${this.getRemainingString()} - ${BASE_TITLE}` : BASE_TITLE;
 
         return this;
     }
