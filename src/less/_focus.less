@@ -6,13 +6,13 @@
   color: var(--front-color);
 
   display: grid;
-  grid-template-areas: 'header header' 'timer sfx' 'footer footer';
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'header' 'timer' 'sfx' 'footer';
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
 
-  @media (max-width: @desktopBreakpoint) {
-    grid-template-areas: 'header' 'timer' 'sfx' 'footer';
-    grid-template-columns: 1fr;
+  @media (min-width: @breakpointDesktop) {
+    grid-template-areas: 'header header' 'timer sfx' 'footer footer';
+    grid-template-columns: 1fr 1fr;
   }
 
   min-height: 100vh;
@@ -24,14 +24,29 @@
     flex-wrap: wrap;
 
     .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
       .logo-primary {
         font-family: 'Zeyada', cursive;
-        font-size: 5em;
+        font-size: 3em;
+
+        @media (min-width: @breakpointTablet) {
+          font-size: 5em;
+        }
       }
 
       .logo-secondary {
-        margin-left: 5em;
-        margin-top: -1em;
+        margin-top: -20px;
+
+        @media (max-width: @breakpointTablet - 1) {
+          display: none;
+        }
+
+        a {
+          color: white;
+        }
       }
     }
   }
@@ -50,21 +65,22 @@
     gap: 1em;
 
     .control {
-      width: 30px;
+      width: 20px;
+      @media (min-width: @breakpointTablet) {
+        width: 30px;
+      }
 
       path {
-        //fill: white;
+        fill: var(--front-color);
       }
     }
   }
-
-
 
   button {
     background: none;
     border: 2px solid var(--front-color);
     padding: 0.5em;
-    border-radius: 10px;
+    border-radius: 15px;
     min-width: 2em;
     color: var(--front-color);
     cursor: pointer;

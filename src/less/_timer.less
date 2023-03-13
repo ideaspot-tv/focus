@@ -2,26 +2,28 @@
   .timer {
     grid-area: timer;
     justify-self: center;
-    max-width: 500px;
 
-    display: grid;
-    align-content: center;
-    justify-content: start;
-    grid-template-areas: 'duration-controls timer-controls' 'clock timer-controls' 'goal timer-controls';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 1em;
 
 
     .clock {
-      grid-area: clock;
       font-size: 6em;
       font-weight: 600;
-      width: 6ex;
     }
 
     .duration-controls {
       grid-area: duration-controls;
       display: flex;
       justify-content: space-around;
+
+      @media (max-width: @breakpointTablet - 1) {
+        .control:nth-child(2),.control:nth-child(3),.control:nth-child(7) {
+          display: none;
+        }
+      }
     }
 
     .timer-controls {
