@@ -1,27 +1,27 @@
-// // import Focus from "./Class/Focus";
-// import FocusTimer from "./Class/FocusTimer";
-//
-// let focusContainer = document.querySelector('section#focus');
-// // document.focusApp = new Focus(focusContainer);
-//
-// document.focusTimer = new FocusTimer(document.querySelector('#focus-timer'));
-
 import Timer from "./Class/Timer";
-import Sfx from "./Class/Sfx";
+import SfxBox from "./Class/SfxBox";
 
 let focusEl = document.querySelector('#focus');
 let timerEl = focusEl.querySelector('.timer');
 let sfxEl = focusEl.querySelector('.sfx');
 let fullScreenHandle = focusEl.querySelector('.control-fullscreen');
+let scrollHandle = focusEl.querySelector('.control-more');
 
 document.timer = new Timer(timerEl);
-
-document.sfxs = [];
-for (let toggle of sfxEl.querySelectorAll('.sfx-toggles .toggle')) {
-    let sfx = new Sfx(toggle);
-    document.sfxs.push(sfx);
-}
+document.sfxBox = new SfxBox(sfxEl, './sfx/manifest.json');
 
 fullScreenHandle.addEventListener('click', () => {
-    focusEl.requestFullscreen();
+    if (focusEl.requestFullscreen) {
+        focusEl.requestFullscreen();
+    } else if (focusEl.webkitRequestFullScreen) {
+        focusEl.webkitRequestFullScreen();
+    }
+});
+
+scrollHandle.addEventListener('click', () => {
+    window.scrollTo({
+        left: 0,
+        top: focusEl.clientHeight,
+        behavior: 'smooth'
+    });
 });

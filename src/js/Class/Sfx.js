@@ -7,23 +7,16 @@ const INITIAL_VOLUME = 0.5;
 
 export default class Sfx {
 
-    constructor(el) {
-        this.el = el;
-        this.icon = el.querySelector('.toggle-icon');
-        this.volumeSlider = el.querySelector('input');
+    constructor(togglesEl, sfxPath, iconClass) {
+        this.togglesEl = togglesEl;
+        this.sfxPath = sfxPath;
+        this.iconClass = iconClass;
+
+        this.el = undefined;
+
+        this.buildDOM();
 
         this.state = STATES.OFF;
-        this.path = this.el.dataset.path;
-
-        this.volumeSlider.min = 0;
-        this.volumeSlider.max = 1;
-        this.volumeSlider.step = 0.1;
-        this.volumeSlider.value = INITIAL_VOLUME;
-
-        this.audio = document.createElement('audio');
-        this.audio.src = `./sfx/${this.path}`;
-        this.audio.volume = INITIAL_VOLUME;
-        this.audio.loop = true;
 
         this.initEventListeners();
 
@@ -71,6 +64,33 @@ export default class Sfx {
 
     getVolume() {
         return this.audio.volume;
+    }
+
+    buildDOM() {
+        let toggle = document.createElement('div');
+        toggle.className = 'toggle';
+        toggle.dataset.path = this.sfxPath;
+
+        this.icon = document.createElement('div');
+        this.icon.className = `toggle-icon fa-solid ${this.iconClass}`;
+        toggle.appendChild(this.icon);
+
+        this.volumeSlider = document.createElement('input');
+        this.volumeSlider.type = 'range';
+        this.volumeSlider.min = 0;
+        this.volumeSlider.max = 1;
+        this.volumeSlider.step = 0.1;
+        this.volumeSlider.value = INITIAL_VOLUME;
+        toggle.appendChild(this.volumeSlider);
+
+        this.audio = document.createElement('audio');
+        this.audio.src = `./sfx/${this.sfxPath}`;
+        this.audio.volume = INITIAL_VOLUME;
+        this.audio.loop = true;
+        toggle.appendChild(this.audio);
+
+        this.el = toggle;
+        this.togglesEl.appendChild(this.el);
     }
 
     updateDOM() {

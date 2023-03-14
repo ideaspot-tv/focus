@@ -5,33 +5,38 @@
     align-self: center;
     padding: 1em;
 
-    max-width: 500px;
+    max-width: 90vw;
+    @media (min-width: @breakpointDesktop) {
+      max-width: 500px;
+    }
 
     .sfx-controls {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 1em;
+      margin: 1em 0;
     }
-
 
     .sfx-toggles {
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
+      overflow: scroll;
+      @media (min-width: @breakpointDesktop) {
+        flex-wrap: wrap;
+        overflow: hidden;
+      }
       gap: 1em;
 
       .toggle {
         position: relative;
         width: 100px;
         height: 110px;
+        flex-shrink: 0;
 
         border: 2px solid var(--front-transparent-color);
         border-radius: 10px;
         padding: 10px;
 
         .toggle-icon {
-          //height: 60px;
           text-align: center;
           font-size: 3em;
           color: var(--front-transparent-color);
@@ -41,13 +46,6 @@
           top: 50%;
           transform: translate(-50%, -50%);
           transition: transform ease 0.5s;
-
-          //svg {
-          //  height: 100%;
-          //  path {
-          //    fill: var(--front-transparent-color);
-          //  }
-          //}
         }
 
         input {
@@ -55,8 +53,7 @@
           position: absolute;
           bottom: 5px;
           left: 5px;
-          right: 5px;
-          width: auto;
+          width: 85px;
         }
 
         &.on {
