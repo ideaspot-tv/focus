@@ -2,12 +2,16 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const INITIAL_DURATION = 30;
+const INITIAL_DURATION = 0.1;
 const STATES = {
     'STOPPED': 'stopped',
     'TICKING': 'ticking',
     'PAUSED': 'paused',
 };
+const DISPLAY_MODES = {
+    'REMAINING': 'remaining',
+    'ELAPSED': 'elapsed'
+}
 const BASE_TITLE = 'Focus by ideaspot.tv';
 
 
@@ -18,6 +22,7 @@ export default class Timer {
 
         this.data = {
             state: STATES.STOPPED,
+            displayMode: DISPLAY_MODES.REMAINING,
             duration: INITIAL_DURATION * 60 * 1000,
             remaining: undefined,
             timeStart: undefined,
@@ -34,6 +39,8 @@ export default class Timer {
             controlPause: el.querySelector('.control-pause'),
             controlResume: el.querySelector('.control-resume'),
             controlReset: el.querySelector('.control-reset'),
+
+            dinger: el.querySelector('.dinger'),
         };
 
         this.interval = undefined;
@@ -100,7 +107,6 @@ export default class Timer {
 
     finish() {
         // todo notification
-        alert('Time out!');
         this.reset();
     }
 
@@ -114,6 +120,20 @@ export default class Timer {
         return this;
     }
 
+    getDisplayMode() {
+        return this.data.displayMode;
+    }
+
+    setDisplayMode(displayMode) {
+        this.data.displayMode = displayMode;
+
+        return this;
+    }
+
+    toggleDisplayMode() {
+        this.setDisplayMode(this.getDisplayMode() === DISPLAY_MODES.REMAINING ? DISPLAY_MODES.ELAPSED : DISPLAY_MODES.REMAINING);
+    }
+
     setDurationMinutes(minutes) {
         this.data.duration = minutes * 60 * 1000;
 
@@ -125,7 +145,11 @@ export default class Timer {
     }
 
     subMinute() {
-        this.data.duration -= 60 * 1000;
+        const oneMinute = 60 * 1000;
+        this.data.duration -= oneMinute;
+        if (this.data.duration < oneMinute) {
+            this.data.duration = oneMinute;
+        }
     }
 
     getDuration() {
@@ -144,6 +168,16 @@ export default class Timer {
 
     getRemainingString() {
         let ms = this.getRemaining();
+        let interval = dayjs.duration(ms, 'ms');
+        return Math.floor(interval.asMinutes()).toString().padStart(2, '0') + ':' + interval.format('ss');
+    }
+
+    getElapased() {
+        return this.getDuration() - this.getRemaining();
+    }
+
+    getElapsedString() {
+        let ms = this.getElapased();
         let interval = dayjs.duration(ms, 'ms');
         return Math.floor(interval.asMinutes()).toString().padStart(2, '0') + ':' + interval.format('ss');
     }
@@ -222,6 +256,13 @@ export default class Timer {
             self.reset();
         });
 
+        this.anchors.clock.addEventListener('click', function () {
+            if (self.getState() === STATES.TICKING) {
+                self.toggleDisplayMode();
+                self.draw();
+            }
+        });
+
         console.debug('Event listeners initialized.');
     }
 
@@ -233,7 +274,10 @@ export default class Timer {
                 break;
             case STATES.PAUSED:
             case STATES.TICKING:
-                this.anchors.clock.innerText = this.getRemainingString();
+                this.anchors.clock.innerText = (this.getDisplayMode() === DISPLAY_MODES.REMAINING)
+                    ? this.getRemainingString()
+                    : this.getElapsedString()
+                ;
                 break;
         }
 
@@ -250,6 +294,11 @@ export default class Timer {
                     .updateRemaining()
                     .draw()
                 ;
+
+                if (Math.round(this.getRemaining() / 1000) === 5) {
+                    this.anchors.dinger.volume = 0.5;
+                    this.anchors.dinger.play();
+                }
 
                 if (this.getRemaining() <= 0) {
                     this.finish();

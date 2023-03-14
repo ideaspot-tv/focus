@@ -84,6 +84,7 @@ export default class Sfx {
         toggle.appendChild(this.volumeSlider);
 
         this.audio = document.createElement('audio');
+        this.audio.preload = 'metadata';
         this.audio.src = `./sfx/${this.sfxPath}`;
         this.audio.volume = INITIAL_VOLUME;
         this.audio.loop = true;
