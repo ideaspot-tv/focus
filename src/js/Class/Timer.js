@@ -57,6 +57,10 @@ export default class Timer {
             return;
         }
 
+        if (Notification.permission !== 'granted' && Notification.permission !== 'blocked') {
+            Notification.requestPermission();
+        }
+
         let now = dayjs();
         this
             .setTimeStart(now)
@@ -106,8 +110,24 @@ export default class Timer {
     }
 
     finish() {
-        // todo notification
+        if (Notification.permission === 'granted') {
+            this.notify();
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then((permission) => {
+                if (Notification.permission === 'granted') {
+                    this.notify();
+                }
+            })
+        }
         this.reset();
+    }
+
+    notify() {
+        const title = 'Focus by ideaspot.tv';
+        const message = `Good job keeping focus for ${this.getDurationString()}!`;
+        new Notification(title, {
+            body: message,
+        });
     }
 
     getState() {
