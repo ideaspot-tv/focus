@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const INITIAL_DURATION = 30;
+const INITIAL_DURATION = 0.1;
 const STATES = {
     'STOPPED': 'stopped',
     'TICKING': 'ticking',
@@ -67,6 +67,8 @@ export default class Timer {
             .setTimeStop(now.add(this.getDuration(), 'ms'))
             .setState(STATES.TICKING)
         ;
+
+        this.el.dispatchEvent(new Event('start'));
     }
 
     resume() {
@@ -82,6 +84,8 @@ export default class Timer {
         ;
 
         this.draw();
+
+        this.el.dispatchEvent(new Event('resume'));
     }
 
     pause() {
@@ -96,6 +100,8 @@ export default class Timer {
         ;
 
         this.draw();
+
+        this.el.dispatchEvent(new Event('pause'));
     }
 
     reset() {
@@ -107,6 +113,8 @@ export default class Timer {
         ;
 
         this.draw();
+
+        this.el.dispatchEvent(new Event('reset'));
     }
 
     finish() {
@@ -120,6 +128,8 @@ export default class Timer {
             })
         }
         this.reset();
+
+        this.el.dispatchEvent(new Event('finish'));
     }
 
     notify() {
@@ -127,6 +137,7 @@ export default class Timer {
         const message = `Good job keeping focus for ${this.getDurationString()}!`;
         new Notification(title, {
             body: message,
+            icon: 'focus-260.png'
         });
     }
 

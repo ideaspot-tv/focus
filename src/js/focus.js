@@ -25,3 +25,7 @@ scrollHandle.addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+
+timerEl.addEventListener('finish', () => {
+    document.sfxBox.toggleAllOff();
+});
