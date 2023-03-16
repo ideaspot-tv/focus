@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const INITIAL_DURATION = 0.1;
+const INITIAL_DURATION = 30;
 const STATES = {
     'STOPPED': 'stopped',
     'TICKING': 'ticking',
@@ -20,14 +20,18 @@ export default class Timer {
     constructor(el) {
         this.el = el;
 
-        this.data = {
-            state: STATES.STOPPED,
-            displayMode: DISPLAY_MODES.REMAINING,
-            duration: INITIAL_DURATION * 60 * 1000,
-            remaining: undefined,
-            timeStart: undefined,
-            timeStop: undefined,
-        };
+        this.data = this.loadData();
+        if (!this.data) {
+            this.data = {
+                state: STATES.STOPPED,
+                displayMode: DISPLAY_MODES.REMAINING,
+                duration: INITIAL_DURATION * 60 * 1000,
+                remaining: undefined,
+                timeStart: undefined,
+                timeStop: undefined,
+                goal: "",
+            };
+        }
 
         this.anchors = {
             clock: el.querySelector('.clock'),
@@ -40,6 +44,8 @@ export default class Timer {
             controlResume: el.querySelector('.control-resume'),
             controlReset: el.querySelector('.control-reset'),
 
+            goal: el.querySelector('.goal textarea'),
+
             dinger: el.querySelector('.dinger'),
         };
 
@@ -47,7 +53,7 @@ export default class Timer {
 
         this.initEventListeners();
 
-        this.draw();
+        this.draw(true);
 
         this.loop();
     }
@@ -252,6 +258,16 @@ export default class Timer {
         return this;
     }
 
+    getGoal() {
+        return this.data.goal;
+    }
+
+    setGoal(obj) {
+        this.data.goal = obj;
+
+        return this;
+    }
+
     initEventListeners() {
         let self = this;
         for (let control of this.anchors.controlsSetMinutes) {
@@ -294,10 +310,14 @@ export default class Timer {
             }
         });
 
+        this.anchors.goal.addEventListener('change', function () {
+            self.setGoal(self.anchors.goal.value);
+        });
+
         console.debug('Event listeners initialized.');
     }
 
-    draw() {
+    draw(isInitial = false) {
         let state = this.data.state;
         switch (state) {
             case STATES.STOPPED:
@@ -314,6 +334,10 @@ export default class Timer {
 
         this.el.dataset.state = state;
         document.title = (state === STATES.TICKING) ? `${this.getRemainingString()} - ${BASE_TITLE}` : BASE_TITLE;
+
+        if (isInitial) {
+            this.anchors.goal.value = this.getGoal();
+        }
 
         return this;
     }
@@ -335,6 +359,27 @@ export default class Timer {
                     this.finish();
                 }
             }
+
+            this.persistData();
         }, 1000);
+    }
+
+    persistData() {
+        localStorage.setItem('focus-timer', JSON.stringify(this.data));
+
+        return this;
+    }
+
+    loadData() {
+        let loaded = JSON.parse(localStorage.getItem('focus-timer'));
+        if (loaded) {
+            if (loaded.timeStart) {
+                loaded.timeStart = dayjs(loaded.timeStart);
+            }
+            if (loaded.timeStop) {
+                loaded.timeStop = dayjs(loaded.timeStop);
+            }
+        }
+        return loaded;
     }
 }
