@@ -20,7 +20,7 @@ export default class Timer {
     constructor(el) {
         this.el = el;
 
-        this.data = this.loadData();
+        this.data = this.load();
         if (!this.data) {
             this.data = {
                 state: STATES.STOPPED,
@@ -74,6 +74,8 @@ export default class Timer {
             .setState(STATES.TICKING)
         ;
 
+        this.save();
+
         this.el.dispatchEvent(new Event('start'));
     }
 
@@ -91,6 +93,8 @@ export default class Timer {
 
         this.draw();
 
+        this.save();
+
         this.el.dispatchEvent(new Event('resume'));
     }
 
@@ -107,6 +111,8 @@ export default class Timer {
 
         this.draw();
 
+        this.save();
+
         this.el.dispatchEvent(new Event('pause'));
     }
 
@@ -119,6 +125,8 @@ export default class Timer {
         ;
 
         this.draw();
+
+        this.save();
 
         this.el.dispatchEvent(new Event('reset'));
     }
@@ -133,6 +141,10 @@ export default class Timer {
                 }
             })
         }
+
+        this.anchors.dinger.volume = 0.5;
+        this.anchors.dinger.play();
+
         this.reset();
 
         this.el.dispatchEvent(new Event('finish'));
@@ -169,6 +181,7 @@ export default class Timer {
 
     toggleDisplayMode() {
         this.setDisplayMode(this.getDisplayMode() === DISPLAY_MODES.REMAINING ? DISPLAY_MODES.ELAPSED : DISPLAY_MODES.REMAINING);
+        this.save();
     }
 
     setDurationMinutes(minutes) {
@@ -311,10 +324,15 @@ export default class Timer {
         });
 
         this.anchors.goal.addEventListener('change', function () {
-            self.setGoal(self.anchors.goal.value);
+            self.updateGoal();
         });
 
         console.debug('Event listeners initialized.');
+    }
+
+    updateGoal(goal) {
+        this.setGoal(this.anchors.goal.value);
+        this.save();
     }
 
     draw(isInitial = false) {
@@ -350,27 +368,20 @@ export default class Timer {
                     .draw()
                 ;
 
-                if (Math.round(this.getRemaining() / 1000) === 5) {
-                    this.anchors.dinger.volume = 0.5;
-                    this.anchors.dinger.play();
-                }
-
                 if (this.getRemaining() <= 0) {
                     this.finish();
                 }
             }
-
-            this.persistData();
         }, 1000);
     }
 
-    persistData() {
+    save() {
         localStorage.setItem('focus-timer', JSON.stringify(this.data));
 
         return this;
     }
 
-    loadData() {
+    load() {
         let loaded = JSON.parse(localStorage.getItem('focus-timer'));
         if (loaded) {
             if (loaded.timeStart) {
@@ -380,6 +391,7 @@ export default class Timer {
                 loaded.timeStop = dayjs(loaded.timeStop);
             }
         }
+
         return loaded;
     }
 }
