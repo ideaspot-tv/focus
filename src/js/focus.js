@@ -26,6 +26,32 @@ scrollHandle.addEventListener('click', () => {
     });
 });
 
-timerEl.addEventListener('finish', () => {
+timerEl.addEventListener('start', (event) => {
+    if (Notification.permission !== 'granted' && Notification.permission !== 'blocked') {
+        Notification.requestPermission();
+    }
+});
+
+const notify = function (durationString, goal) {
+    const title = 'Focus by ideaspot.tv';
+    const message = `Good job keeping focus for ${durationString}${goal ? (' on ' + goal) : ''}!`;
+    new Notification(title, {
+        body: message,
+        icon: 'focus-260.png'
+    });
+};
+timerEl.addEventListener('finish', (event) => {
+    console.debug(event);
+
+    if (Notification.permission === 'granted') {
+        notify(event.detail.durationString, event.detail.goal);
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+            if (Notification.permission === 'granted') {
+                notify(event.detail.durationString, event.detail.goal);
+            }
+        })
+    }
+
     document.sfxBox.toggleAllOff();
 });

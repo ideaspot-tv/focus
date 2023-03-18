@@ -49,8 +49,6 @@ export default class Timer {
             dinger: el.querySelector('.dinger'),
         };
 
-        this.interval = undefined;
-
         this.initEventListeners();
 
         this.draw(true);
@@ -61,10 +59,6 @@ export default class Timer {
     start() {
         if (this.getState() !== STATES.STOPPED) {
             return;
-        }
-
-        if (Notification.permission !== 'granted' && Notification.permission !== 'blocked') {
-            Notification.requestPermission();
         }
 
         let now = dayjs();
@@ -132,31 +126,18 @@ export default class Timer {
     }
 
     finish() {
-        if (Notification.permission === 'granted') {
-            this.notify();
-        } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then((permission) => {
-                if (Notification.permission === 'granted') {
-                    this.notify();
-                }
-            })
-        }
-
         this.anchors.dinger.volume = 0.5;
         this.anchors.dinger.play();
 
         this.reset();
 
-        this.el.dispatchEvent(new Event('finish'));
-    }
-
-    notify() {
-        const title = 'Focus by ideaspot.tv';
-        const message = `Good job keeping focus for ${this.getDurationString()}!`;
-        new Notification(title, {
-            body: message,
-            icon: 'focus-260.png'
-        });
+        this.el.dispatchEvent(new CustomEvent('finish', {
+            detail: {
+                duration: this.getDuration(),
+                durationString: this.getDurationString(),
+                goal: this.getGoal(),
+            }
+        }));
     }
 
     getState() {
